@@ -114,3 +114,21 @@ rag_builder_ui = StreamlitRagBuilder(st)
 # Create the UI
 rag_builder_ui.create_ui()
 ```
+
+## Chapter Extraction Module
+
+This repository also contains a simple tool to detect chapters in a PDF file. The
+`PDFChapterExtractor` relies on a minimal logistic regression implementation. The
+training step can run in parallel using multiple processes, and the results are
+returned as `Chapter` data models.
+
+Example usage:
+
+```python
+from chapter_extractor.extractor import PDFChapterExtractor
+
+extractor = PDFChapterExtractor()
+chapters = extractor.extract("book.pdf")
+for chapter in chapters:
+    print(chapter)
+```
