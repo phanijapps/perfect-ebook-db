@@ -7,22 +7,21 @@ from pathlib import Path
 
 import streamlit as st
 
-from book_builder.faiss_ragbuilder import FaissRagBuilder
+from book_builder.chroma_ragbuilder import ChromaRagBuilder
 
 
 _DATA_DIR = Path("../_data")
-_INDEX_DIR = _DATA_DIR / "faiss_index"
+_INDEX_DIR = _DATA_DIR / "chroma_index"
 _PAGES_DIR = _DATA_DIR / "pages"
 _DB_PATH = _DATA_DIR / "pages.sqlite"
 
 
-def get_builder() -> FaissRagBuilder:
+def get_builder() -> ChromaRagBuilder:
     """Return a ``FaissRagBuilder`` configured to use the ``_data`` directory."""
     _DATA_DIR.mkdir(exist_ok=True)
-    return FaissRagBuilder(
+    return ChromaRagBuilder(
         index_dir=str(_INDEX_DIR),
         output_dir=str(_PAGES_DIR),
-        db_path=str(_DB_PATH),
     )
 
 
@@ -71,7 +70,7 @@ with tab1:
             builder = get_builder()
             
             with st.spinner("Processing PDF... This may take a while."):
-                md_paths = builder.process_pdf(
+                builder.process_pdf(
                     pdf_path=tmp_path,
                     title=title or uploaded_pdf.name,
                     author=author or "Unknown",
@@ -84,7 +83,7 @@ with tab1:
             # Store builder in session state for use in query tab
             st.session_state.builder = builder
             
-            st.success(f"PDF processed and indexed. Generated {len(md_paths)} markdown files.")
+            st.success(f"PDF processed and indexed. Generated files.")
 
 # Tab 2: Query
 with tab2:
